@@ -9,6 +9,7 @@ import ResumePreview from '@/components/resume-preview';
 import { useToast } from '@/hooks/use-toast';
 import ThemeSelector from './theme-selector';
 import { fontOptions, colorOptions } from '@/lib/themes';
+import TemplateSelector from './template-selector';
 
 export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
@@ -22,7 +23,6 @@ export default function ResumeBuilder() {
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        // Basic validation to prevent loading malformed data
         if (parsed.personalInfo && parsed.sections && parsed.theme) {
           setResumeData(parsed);
         } else {
@@ -114,29 +114,38 @@ export default function ResumeBuilder() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
+    <div className="bg-background text-foreground min-h-screen">
       <ResumeHeader resumeData={resumeData} onJsonImport={handleJsonImport} />
-      <div className="flex-grow grid grid-cols-1 xl:grid-cols-[400px_1fr] overflow-hidden">
-        <aside className="xl:col-span-1 flex flex-col gap-4 overflow-y-auto p-4 border-r">
-          <ThemeSelector 
-            currentTheme={resumeData.theme}
-            currentLayout={resumeData.layout}
-            onThemeChange={handleThemeChange}
-            onLayoutChange={handleLayoutChange}
-            fontOptions={fontOptions}
-            colorOptions={colorOptions}
-          />
-          <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
-        </aside>
-        <main className="xl:col-span-1 flex justify-center items-start p-8 bg-secondary/30 overflow-y-auto">
-          <ResumePreview 
-            resumeData={resumeData} 
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          />
-        </main>
-      </div>
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3">Two-column resume templates</h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">Our two-column resume templates help you maximize space while keeping your resume clean and organized, making it easy to showcase your strengths at a glance.</p>
+        </div>
+
+        <TemplateSelector currentLayout={resumeData.layout} onLayoutChange={handleLayoutChange} />
+
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-1 space-y-8">
+              <ThemeSelector 
+                currentTheme={resumeData.theme}
+                onThemeChange={handleThemeChange}
+                fontOptions={fontOptions}
+                colorOptions={colorOptions}
+              />
+              <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
+            </div>
+
+            <div className="lg:col-span-2">
+                 <ResumePreview 
+                    resumeData={resumeData} 
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                 />
+            </div>
+        </div>
+      </main>
     </div>
   );
 }

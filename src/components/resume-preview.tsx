@@ -32,7 +32,7 @@ export default function ResumePreview({ resumeData, onDragStart, onDragOver, onD
   }
 
   return (
-    <div id="resume-container">
+    <div id="resume-container" className="sticky top-24">
       {renderTemplate()}
     </div>
   );

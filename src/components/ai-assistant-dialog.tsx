@@ -61,13 +61,13 @@ export default function AiAssistantDialog() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <Sparkles className="mr-2 h-4 w-4 text-accent" /> AI Assistant
+          <Sparkles className="mr-2 h-4 w-4 text-primary" /> AI Assistant
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="font-headline flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-accent" /> AI Writing Assistant
+            <Sparkles className="w-5 h-5 text-primary" /> AI Writing Assistant
           </DialogTitle>
           <DialogDescription>
             Paste any part of your resume (like a summary or job description) and let our AI improve it for you.
@@ -92,7 +92,7 @@ export default function AiAssistantDialog() {
                 value={improvedText}
                 readOnly
                 rows={10}
-                className="bg-muted h-full"
+                className="bg-secondary h-full"
               />
               {isLoading && (
                 <div className="absolute inset-0 bg-background/50 flex items-center justify-center rounded-md">
@@ -106,7 +106,7 @@ export default function AiAssistantDialog() {
           {improvedText && (
             <Button variant="secondary" onClick={handleCopyToClipboard}>Copy to Clipboard</Button>
           )}
-          <Button onClick={handleImproveText} disabled={isLoading} className="bg-accent hover:bg-accent/90">
+          <Button onClick={handleImproveText} disabled={isLoading}>
             {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Improving...</> : 'Improve Text'}
           </Button>
         </DialogFooter>
