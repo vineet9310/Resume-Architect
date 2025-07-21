@@ -6,7 +6,6 @@ import { initialResumeData } from '@/lib/initial-resume';
 import ResumeHeader from '@/components/resume-header';
 import ResumeControls from '@/components/resume-controls';
 import ResumePreview from '@/components/resume-preview';
-import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import ThemeSelector from './theme-selector';
 import { fontOptions, colorOptions } from '@/lib/themes';
@@ -105,21 +104,21 @@ export default function ResumeBuilder() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <ResumeHeader resumeData={resumeData} onJsonImport={handleJsonImport} />
-      <div className="flex-grow grid grid-cols-1 xl:grid-cols-3 gap-4 p-4 overflow-hidden">
-        <aside className="xl:col-span-1 h-full flex flex-col gap-4">
+      <div className="flex-grow grid grid-cols-1 xl:grid-cols-3 gap-4 p-4">
+        <aside className="xl:col-span-1 flex flex-col gap-4">
           <ThemeSelector 
             currentTheme={resumeData.theme}
             onThemeChange={handleThemeChange}
             fontOptions={fontOptions}
             colorOptions={colorOptions}
           />
-          <div className="flex-grow overflow-y-auto pr-2">
+          <div className="flex-grow">
             <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
           </div>
         </aside>
-        <main className="xl:col-span-2 h-full overflow-y-auto flex justify-center items-start p-4 bg-secondary/30 rounded-lg">
+        <main className="xl:col-span-2 flex justify-center items-start p-4 bg-secondary/30 rounded-lg">
           <ResumePreview 
             resumeData={resumeData} 
             onDragStart={handleDragStart}
@@ -128,7 +127,6 @@ export default function ResumeBuilder() {
           />
         </main>
       </div>
-      <Toaster />
     </div>
   );
 }
