@@ -1,8 +1,7 @@
 'use client';
 
-import { FileDown, FileUp, Download, Sparkles } from 'lucide-react';
+import { FileDown, FileUp, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import AiAssistantDialog from './ai-assistant-dialog';
 import type { ResumeData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -64,18 +63,16 @@ export default function ResumeHeader({ resumeData, onJsonImport }: ResumeHeaderP
                     </h1>
                 </div>
                 <div className="flex items-center gap-2">
-                    <AiAssistantDialog />
-                    
                     <Button variant="outline" size="sm" onClick={handleJsonExport}>
-                    <FileDown /> Export JSON
+                    <FileDown className="mr-2 h-4 w-4" /> Export JSON
                     </Button>
                     <Button variant="outline" size="sm" onClick={triggerJsonImport}>
-                    <FileUp /> Import JSON
+                    <FileUp className="mr-2 h-4 w-4" /> Import JSON
                     </Button>
                     <input type="file" id="json-import-input" className="hidden" accept=".json" onChange={onJsonImport} />
 
                     <Button size="sm" onClick={handlePrint}>
-                    <Download /> Download PDF
+                    <Download className="mr-2 h-4 w-4" /> Download PDF
                     </Button>
                 </div>
             </div>

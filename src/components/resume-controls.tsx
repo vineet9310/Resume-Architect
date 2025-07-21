@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { ResumeData, Section, PersonalInfo, Experience, Education, Project, Certification } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -7,19 +8,73 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AccordionHeader } from '@/components/ui/accordion';
-import { Trash2, PlusCircle, ChevronsUpDown } from 'lucide-react';
+import { Trash2, PlusCircle, ChevronsUpDown, Sparkles, Loader2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { improveResumeWriting } from '@/ai/flows/improve-resume-writing';
+import { useToast } from '@/hooks/use-toast';
 
 interface ResumeControlsProps {
   resumeData: ResumeData;
   setResumeData: React.Dispatch<React.SetStateAction<ResumeData>>;
 }
+
+const AiTextarea = ({
+  value,
+  onChange,
+  onImprove,
+  ...props
+}: React.ComponentProps<typeof Textarea> & { onImprove: (newValue: string) => void }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleImprove = async () => {
+    if (!value || typeof value !== 'string' || !value.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Input Required',
+        description: 'Please enter some text to improve.',
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const result = await improveResumeWriting({ resumeContent: value as string });
+      onImprove(result.improvedResumeContent);
+    } catch (error) {
+      console.error('AI assistant error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to get suggestion from AI assistant.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <Textarea value={value} onChange={onChange} {...props} />
+      <div className="absolute bottom-2 right-2">
+        <Button variant="secondary" size="sm" onClick={handleImprove} disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="mr-2 h-4 w-4 text-primary" />
+          )}
+          Improve with AI
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 
 export default function ResumeControls({ resumeData, setResumeData }: ResumeControlsProps) {
 
@@ -51,13 +106,23 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
   const renderSectionControls = (section: Section) => {
     switch(section.type) {
       case 'summary':
+        return (
+          <AiTextarea
+            value={section.content}
+            onChange={(e) => handleSectionContentChange(section.id, e.target.value)}
+            onImprove={(improved) => handleSectionContentChange(section.id, improved)}
+            rows={6}
+            placeholder="Enter a professional summary..."
+            className="text-sm pr-36 pb-10"
+          />
+        );
       case 'skills':
       case 'languages':
         return (
           <Textarea 
             value={section.content}
             onChange={(e) => handleSectionContentChange(section.id, e.target.value)}
-            rows={section.type === 'summary' ? 6 : 3}
+            rows={3}
             placeholder={
               section.type === 'skills' ? "e.g. JavaScript, React, Node.js" :
               section.type === 'languages' ? "e.g. English (Native), Spanish (Conversational)" :
@@ -82,7 +147,14 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                       <Input placeholder="Start Date" value={exp.startDate} onChange={e => updateArrayItem(section.id, index, 'startDate', e.target.value)} />
                       <Input placeholder="End Date" value={exp.endDate} onChange={e => updateArrayItem(section.id, index, 'endDate', e.target.value)} />
                     </div>
-                    <Textarea placeholder="Description" rows={4} value={exp.description} onChange={e => updateArrayItem(section.id, index, 'description', e.target.value)} />
+                    <AiTextarea 
+                      placeholder="Description" 
+                      rows={4} 
+                      value={exp.description} 
+                      onChange={e => updateArrayItem(section.id, index, 'description', e.target.value)}
+                      onImprove={(improved) => updateArrayItem(section.id, index, 'description', improved)}
+                      className="pr-36 pb-10"
+                    />
                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeArrayItem(section.id, index)}><Trash2 className="w-4 h-4 mr-2" />Remove</Button>
                   </AccordionContent>
                 </AccordionItem>
@@ -162,7 +234,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
     setResumeData(prev => {
       const newSections = prev.sections.map(s => {
         if (s.id === sectionId) {
-          const newContent = [...s.content];
+          const newContent = [...(s.content as any[])];
           newContent[index] = { ...newContent[index], [field]: value };
           return { ...s, content: newContent };
         }
@@ -176,7 +248,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
     setResumeData(prev => {
       const newSections = prev.sections.map(s => {
         if (s.id === sectionId) {
-          const newContent = s.content.filter((_: any, i: number) => i !== index);
+          const newContent = (s.content as any[]).filter((_: any, i: number) => i !== index);
           return { ...s, content: newContent };
         }
         return s;
@@ -199,7 +271,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
             default: newItem = null;
           }
           if(newItem) {
-            return { ...s, content: [...s.content, newItem] };
+            return { ...s, content: [...(s.content as any[]), newItem] };
           }
         }
         return s;
