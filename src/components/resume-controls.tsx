@@ -232,7 +232,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Personal Information</CardTitle>
+          <CardTitle className="font-headline text-base">Personal Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1">
@@ -264,31 +264,33 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Resume Sections</CardTitle>
+          <CardTitle className="font-headline text-base">Resume Sections</CardTitle>
         </CardHeader>
         <CardContent>
-          <Accordion type="multiple" className="w-full">
+          <Accordion type="multiple" className="w-full space-y-2">
             {resumeData.sections.map(section => (
-              <AccordionItem value={section.id} key={section.id}>
-                <div className="flex items-center w-full">
-                  <AccordionTrigger className="font-semibold hover:no-underline flex-grow">
-                    <div className="flex items-center gap-2 flex-grow">
-                      <ChevronsUpDown className="w-4 h-4 text-muted-foreground cursor-grab" />
-                      <Input 
-                        value={section.title}
-                        onChange={(e) => handleSectionTitleChange(section.id, e.target.value)}
-                        className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto bg-transparent font-semibold"
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                  </AccordionTrigger>
-                  <Button variant="ghost" size="icon" onClick={() => removeSection(section.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 mr-2 shrink-0">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-                <AccordionContent className="p-1">
-                  {renderSectionControls(section)}
-                </AccordionContent>
+              <AccordionItem value={section.id} key={section.id} className="border-b-0">
+                 <Card className="overflow-hidden">
+                    <AccordionHeader className="flex items-center p-2">
+                        <AccordionTrigger className="font-semibold hover:no-underline flex-grow p-2 text-sm">
+                            <div className="flex items-center gap-2 flex-grow">
+                                <ChevronsUpDown className="w-4 h-4 text-muted-foreground cursor-grab" />
+                                <Input 
+                                    value={section.title}
+                                    onChange={(e) => handleSectionTitleChange(section.id, e.target.value)}
+                                    className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto bg-transparent font-semibold"
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            </div>
+                        </AccordionTrigger>
+                        <Button variant="ghost" size="icon" onClick={() => removeSection(section.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </AccordionHeader>
+                    <AccordionContent className="p-4 pt-0">
+                    {renderSectionControls(section)}
+                    </AccordionContent>
+                 </Card>
               </AccordionItem>
             ))}
           </Accordion>

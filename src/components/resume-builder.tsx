@@ -110,14 +110,14 @@ export default function ResumeBuilder() {
   }
 
   if (!isClient) {
-     return <div className="w-full h-full flex items-center justify-center bg-background"><p>Loading Resume Architect...</p></div>;
+     return <div className="w-full h-screen flex items-center justify-center bg-background"><p>Loading Resume Architect...</p></div>;
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col h-screen bg-background text-foreground">
       <ResumeHeader resumeData={resumeData} onJsonImport={handleJsonImport} />
-      <div className="flex-grow grid grid-cols-1 xl:grid-cols-3 gap-4 p-4">
-        <aside className="xl:col-span-1 flex flex-col gap-4">
+      <div className="flex-grow grid grid-cols-1 xl:grid-cols-[400px_1fr] overflow-hidden">
+        <aside className="xl:col-span-1 flex flex-col gap-4 overflow-y-auto p-4 border-r">
           <ThemeSelector 
             currentTheme={resumeData.theme}
             currentLayout={resumeData.layout}
@@ -126,11 +126,9 @@ export default function ResumeBuilder() {
             fontOptions={fontOptions}
             colorOptions={colorOptions}
           />
-          <div className="flex-grow overflow-y-auto">
-            <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
-          </div>
+          <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
         </aside>
-        <main className="xl:col-span-2 flex justify-center items-start p-4 bg-secondary/30 rounded-lg overflow-y-auto">
+        <main className="xl:col-span-1 flex justify-center items-start p-8 bg-secondary/30 overflow-y-auto">
           <ResumePreview 
             resumeData={resumeData} 
             onDragStart={handleDragStart}

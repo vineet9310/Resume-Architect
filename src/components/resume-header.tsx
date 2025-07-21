@@ -48,9 +48,9 @@ export default function ResumeHeader({ resumeData, onJsonImport }: ResumeHeaderP
   }
 
   return (
-    <header className="flex items-center justify-between px-4 py-2 border-b bg-card shadow-sm print:hidden">
+    <header className="flex items-center justify-between px-4 py-3 border-b bg-card shadow-sm print:hidden shrink-0">
       <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-primary font-headline">
+        <h1 className="text-xl font-bold text-primary font-headline">
           Resume<span className="text-foreground">Architect</span>
         </h1>
       </div>
@@ -65,7 +65,7 @@ export default function ResumeHeader({ resumeData, onJsonImport }: ResumeHeaderP
         </Button>
         <input type="file" id="json-import-input" className="hidden" accept=".json" onChange={onJsonImport} />
 
-        <Button size="sm" onClick={handlePrint}>
+        <Button size="sm" onClick={handlePrint} className="bg-accent hover:bg-accent/90">
           <Download /> Download PDF
         </Button>
       </div>
