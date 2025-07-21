@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { improveResumeWriting } from '@/ai/flows/improve-resume-writing';
 import { useToast } from '@/hooks/use-toast';
+import { DatePicker } from './date-picker';
+
 
 interface ResumeControlsProps {
   resumeData: ResumeData;
@@ -144,8 +146,8 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                     <Input placeholder="Company" value={exp.company} onChange={e => updateArrayItem(section.id, index, 'company', e.target.value)} />
                     <Input placeholder="Location" value={exp.location} onChange={e => updateArrayItem(section.id, index, 'location', e.target.value)} />
                     <div className="flex gap-2">
-                      <Input placeholder="Start Date" value={exp.startDate} onChange={e => updateArrayItem(section.id, index, 'startDate', e.target.value)} />
-                      <Input placeholder="End Date" value={exp.endDate} onChange={e => updateArrayItem(section.id, index, 'endDate', e.target.value)} />
+                      <DatePicker placeholder="Start Date" value={exp.startDate} onChange={value => updateArrayItem(section.id, index, 'startDate', value)} />
+                      <DatePicker placeholder="End Date" value={exp.endDate} onChange={value => updateArrayItem(section.id, index, 'endDate', value)} />
                     </div>
                     <AiTextarea 
                       placeholder="Description" 
@@ -174,7 +176,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                   <AccordionContent className="space-y-2">
                     <Input placeholder="Degree" value={edu.degree} onChange={e => updateArrayItem(section.id, index, 'degree', e.target.value)} />
                     <Input placeholder="Institution" value={edu.institution} onChange={e => updateArrayItem(section.id, index, 'institution', e.target.value)} />
-                    <Input placeholder="Graduation Date" value={edu.graduationDate} onChange={e => updateArrayItem(section.id, index, 'graduationDate', e.target.value)} />
+                    <DatePicker placeholder="Graduation Date" value={edu.graduationDate} onChange={value => updateArrayItem(section.id, index, 'graduationDate', value)} />
                     <Input placeholder="GPA" value={edu.gpa} onChange={e => updateArrayItem(section.id, index, 'gpa', e.target.value)} />
                     <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeArrayItem(section.id, index)}><Trash2 className="w-4 h-4 mr-2" />Remove</Button>
                   </AccordionContent>
@@ -216,7 +218,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                   <AccordionContent className="space-y-2">
                     <Input placeholder="Certification Name" value={cert.name} onChange={e => updateArrayItem(section.id, index, 'name', e.target.value)} />
                     <Input placeholder="Issuing Organization" value={cert.issuer} onChange={e => updateArrayItem(section.id, index, 'issuer', e.target.value)} />
-                    <Input placeholder="Date Issued" value={cert.date} onChange={e => updateArrayItem(section.id, index, 'date', e.target.value)} />
+                    <DatePicker placeholder="Date Issued" value={cert.date} onChange={value => updateArrayItem(section.id, index, 'date', value)} />
                     <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeArrayItem(section.id, index)}><Trash2 className="w-4 h-4 mr-2" />Remove</Button>
                   </AccordionContent>
                 </AccordionItem>
