@@ -45,7 +45,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
     } catch(e) {
         setDate(undefined);
     }
-  }, [value]);
+  }, [value, date]);
 
 
   return (
