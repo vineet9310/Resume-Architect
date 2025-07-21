@@ -11,7 +11,7 @@ export interface Experience {
   id: string;
   title: string;
   company: string;
-  location: string;
+  location:string;
   startDate: string;
   endDate: string;
   description: string;
@@ -41,11 +41,13 @@ export type Section = {
   visible: boolean;
 };
 
+export interface ResumeTheme {
+  color: string;
+  font: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   sections: Section[];
-  theme: {
-    color: string;
-    font: string;
-  };
+  theme: ResumeTheme;
 }

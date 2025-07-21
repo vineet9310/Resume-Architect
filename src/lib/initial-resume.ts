@@ -82,7 +82,7 @@ export const initialResumeData: ResumeData = {
     },
   ],
   theme: {
-    color: 'blue',
-    font: 'inter',
+    color: 'default',
+    font: 'lexend',
   },
 };
