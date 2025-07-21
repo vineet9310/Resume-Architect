@@ -1,6 +1,6 @@
 'use client';
 
-import type { ResumeData, Section, PersonalInfo, Experience, Education, Project } from '@/lib/types';
+import type { ResumeData, Section, PersonalInfo, Experience, Education, Project, Certification } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -51,20 +51,18 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
   const renderSectionControls = (section: Section) => {
     switch(section.type) {
       case 'summary':
+      case 'skills':
+      case 'languages':
         return (
           <Textarea 
             value={section.content}
             onChange={(e) => handleSectionContentChange(section.id, e.target.value)}
-            rows={6}
-            className="text-sm"
-          />
-        );
-      case 'skills':
-         return (
-          <Textarea 
-            value={section.content}
-            onChange={(e) => handleSectionContentChange(section.id, e.target.value)}
-            placeholder="e.g. JavaScript, React, Node.js"
+            rows={section.type === 'summary' ? 6 : 3}
+            placeholder={
+              section.type === 'skills' ? "e.g. JavaScript, React, Node.js" :
+              section.type === 'languages' ? "e.g. English (Native), Spanish (Conversational)" :
+              "Enter content..."
+            }
             className="text-sm"
           />
         );
@@ -135,6 +133,26 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
             <Button variant="outline" size="sm" onClick={() => addArrayItem(section.id)}><PlusCircle className="w-4 h-4 mr-2" />Add Project</Button>
           </div>
         )
+       case 'certifications':
+        const certifications = section.content as Certification[];
+        return (
+          <div className="space-y-4">
+            {certifications.map((cert, index) => (
+              <Accordion type="single" collapsible key={cert.id} className="border rounded-md px-2">
+                <AccordionItem value={cert.id} className="border-b-0">
+                  <AccordionTrigger className="text-sm hover:no-underline">{cert.name || `Certification ${index + 1}`}</AccordionTrigger>
+                  <AccordionContent className="space-y-2">
+                    <Input placeholder="Certification Name" value={cert.name} onChange={e => updateArrayItem(section.id, index, 'name', e.target.value)} />
+                    <Input placeholder="Issuing Organization" value={cert.issuer} onChange={e => updateArrayItem(section.id, index, 'issuer', e.target.value)} />
+                    <Input placeholder="Date Issued" value={cert.date} onChange={e => updateArrayItem(section.id, index, 'date', e.target.value)} />
+                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeArrayItem(section.id, index)}><Trash2 className="w-4 h-4 mr-2" />Remove</Button>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ))}
+            <Button variant="outline" size="sm" onClick={() => addArrayItem(section.id)}><PlusCircle className="w-4 h-4 mr-2" />Add Certification</Button>
+          </div>
+        );
       default:
         return null;
     }
@@ -177,6 +195,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
             case 'experience': newItem = { id: newId, title: '', company: '', location: '', startDate: '', endDate: '', description: '' }; break;
             case 'education': newItem = { id: newId, institution: '', degree: '', graduationDate: '', gpa: '' }; break;
             case 'projects': newItem = { id: newId, name: '', description: '', technologies: '', link: '' }; break;
+            case 'certifications': newItem = { id: newId, name: '', issuer: '', date: '' }; break;
             default: newItem = null;
           }
           if(newItem) {
@@ -195,11 +214,12 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
       type,
       title: type.charAt(0).toUpperCase() + type.slice(1),
       visible: true,
-      content: type === 'summary' || type === 'skills' ? '' : [],
+      content: ['summary', 'skills', 'languages'].includes(type) ? '' : [],
     };
     if (type === 'experience') newSection.content = [{ id: 'exp_new', title: '', company: '', location: '', startDate: '', endDate: '', description: '' }];
     if (type === 'education') newSection.content = [{ id: 'edu_new', institution: '', degree: '', graduationDate: '', gpa: '' }];
     if (type === 'projects') newSection.content = [{ id: 'proj_new', name: '', description: '', technologies: '', link: '' }];
+    if (type === 'certifications') newSection.content = [{ id: 'cert_new', name: '', issuer: '', date: '' }];
     setResumeData(prev => ({...prev, sections: [...prev.sections, newSection]}));
   }
 
@@ -283,6 +303,8 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                   <SelectItem value="education">Education</SelectItem>
                   <SelectItem value="skills">Skills</SelectItem>
                   <SelectItem value="projects">Projects</SelectItem>
+                  <SelectItem value="certifications">Certifications</SelectItem>
+                  <SelectItem value="languages">Languages</SelectItem>
                 </SelectContent>
               </Select>
           </div>

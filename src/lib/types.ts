@@ -33,9 +33,16 @@ export interface Project {
   link: string;
 }
 
+export interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
 export type Section = {
   id: string;
-  type: 'summary' | 'experience' | 'education' | 'skills' | 'projects';
+  type: 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'languages';
   title: string;
   content: any;
   visible: boolean;

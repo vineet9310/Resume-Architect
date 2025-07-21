@@ -1,6 +1,6 @@
 'use client';
 
-import type { ResumeData, Section, Experience, Education, Project } from '@/lib/types';
+import type { ResumeData, Section, Experience, Education, Project, Certification } from '@/lib/types';
 import { Mail, Phone, MapPin, Linkedin, Github, MoveVertical } from 'lucide-react';
 import { DragEvent } from 'react';
 import { fontOptions, colorOptions } from '@/lib/themes';
@@ -39,7 +39,7 @@ export default function TwoColumnTemplate({ resumeData, onDragStart, onDragOver,
   } as React.CSSProperties;
 
   const mainSections = sections.filter(s => ['summary', 'experience', 'projects'].includes(s.type));
-  const sidebarSections = sections.filter(s => ['education', 'skills'].includes(s.type));
+  const sidebarSections = sections.filter(s => ['education', 'skills', 'certifications', 'languages'].includes(s.type));
 
   const renderSectionContent = (section: Section) => {
     switch (section.type) {
@@ -86,6 +86,20 @@ export default function TwoColumnTemplate({ resumeData, onDragStart, onDragOver,
             ))}
           </div>
         );
+      case 'certifications':
+        return (
+            <div className="space-y-3">
+            {(section.content as Certification[]).map(cert => (
+              <div key={cert.id}>
+                <h3 className="text-sm font-semibold text-gray-800">{cert.name}</h3>
+                <p className="text-xs text-gray-600">{cert.issuer}</p>
+                <p className="text-xs text-gray-500">{cert.date}</p>
+              </div>
+            ))}
+          </div>
+        );
+      case 'languages':
+        return <p className="text-sm text-[color:var(--text-color)] leading-relaxed">{section.content}</p>;
       default:
         return null;
     }

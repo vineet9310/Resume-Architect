@@ -1,6 +1,6 @@
 'use client';
 
-import type { ResumeData, Section, Experience, Education, Project } from '@/lib/types';
+import type { ResumeData, Section, Experience, Education, Project, Certification } from '@/lib/types';
 import { Mail, Phone, MapPin, Linkedin, Github, MoveVertical } from 'lucide-react';
 import { DragEvent } from 'react';
 import { cn } from '@/lib/utils';
@@ -99,6 +99,19 @@ export default function CorporateTemplate({ resumeData, onDragStart, onDragOver,
             ))}
           </div>
         );
+      case 'certifications':
+        return (
+            <div className="space-y-2">
+            {(section.content as Certification[]).map(cert => (
+              <div key={cert.id}>
+                <h3 className="text-md font-bold">{cert.name} - <span className="text-sm font-normal italic">{cert.issuer}</span></h3>
+                <p className="text-xs">{cert.date}</p>
+              </div>
+            ))}
+          </div>
+        );
+      case 'languages':
+        return <p className="text-sm">{section.content}</p>;
       default:
         return null;
     }
