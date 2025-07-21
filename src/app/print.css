@@ -1,0 +1,46 @@
+/* A4 paper size for printing */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* Chrome, Safari */
+    color-adjust: exact; /* Firefox */
+    background-color: #fff;
+  }
+
+  .print\:hidden {
+    display: none;
+  }
+
+  #resume-preview {
+    box-shadow: none;
+    border-radius: 0;
+    width: 210mm;
+    min-height: 297mm;
+    height: auto;
+    padding: 20mm;
+    margin: 0;
+    border: none;
+  }
+
+  /* Ensure no page breaks inside these elements */
+  .mb-4, .mb-6 {
+    page-break-inside: avoid;
+  }
+
+  /* Add some space before sections to avoid them sticking to the top of a new page */
+  h2 {
+    page-break-before: auto;
+    page-break-after: avoid;
+  }
+}
+
+.A4-size {
+    width: 210mm;
+    min-height: 297mm;
+    margin-left: auto;
+    margin-right: auto;
+}
