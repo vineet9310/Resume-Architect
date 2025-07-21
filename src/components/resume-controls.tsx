@@ -250,20 +250,22 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
           <Accordion type="multiple" className="w-full">
             {resumeData.sections.map(section => (
               <AccordionItem value={section.id} key={section.id}>
-                <AccordionTrigger className="font-semibold hover:no-underline">
-                  <div className="flex items-center gap-2 flex-grow">
-                    <ChevronsUpDown className="w-4 h-4 text-muted-foreground cursor-grab" />
-                    <Input 
-                      value={section.title}
-                      onChange={(e) => handleSectionTitleChange(section.id, e.target.value)}
-                      className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto bg-transparent font-semibold"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                   <Button variant="ghost" size="icon" onClick={(e) => {e.stopPropagation(); removeSection(section.id)}} className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                <div className="flex items-center w-full">
+                  <AccordionTrigger className="font-semibold hover:no-underline flex-grow">
+                    <div className="flex items-center gap-2 flex-grow">
+                      <ChevronsUpDown className="w-4 h-4 text-muted-foreground cursor-grab" />
+                      <Input 
+                        value={section.title}
+                        onChange={(e) => handleSectionTitleChange(section.id, e.target.value)}
+                        className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto bg-transparent font-semibold"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </AccordionTrigger>
+                  <Button variant="ghost" size="icon" onClick={() => removeSection(section.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 mr-2 shrink-0">
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </AccordionTrigger>
+                </div>
                 <AccordionContent className="p-1">
                   {renderSectionControls(section)}
                 </AccordionContent>
