@@ -5,6 +5,7 @@ import { DragEvent } from 'react';
 import ModernTemplate from './resume-templates/modern-template';
 import CreativeTemplate from './resume-templates/creative-template';
 import CorporateTemplate from './resume-templates/corporate-template';
+import TwoColumnTemplate from './resume-templates/two-column-template';
 
 interface ResumePreviewProps {
   resumeData: ResumeData;
@@ -22,6 +23,8 @@ export default function ResumePreview({ resumeData, onDragStart, onDragOver, onD
         return <CreativeTemplate {...{ resumeData, onDragStart, onDragOver, onDrop }} />;
       case 'corporate':
         return <CorporateTemplate {...{ resumeData, onDragStart, onDragOver, onDrop }} />;
+      case 'two-column':
+        return <TwoColumnTemplate {...{ resumeData, onDragStart, onDragOver, onDrop }} />;
       case 'modern':
       default:
         return <ModernTemplate {...{ resumeData, onDragStart, onDragOver, onDrop }} />;

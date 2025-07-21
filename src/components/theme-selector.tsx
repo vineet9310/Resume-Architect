@@ -28,6 +28,7 @@ const layoutOptions: { value: ResumeLayout, label: string }[] = [
     { value: 'modern', label: 'Modern' },
     { value: 'creative', label: 'Creative' },
     { value: 'corporate', label: 'Corporate' },
+    { value: 'two-column', label: 'Two Column' },
 ]
 
 export default function ThemeSelector({
