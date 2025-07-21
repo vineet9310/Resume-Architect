@@ -46,8 +46,11 @@ export interface ResumeTheme {
   font: string;
 }
 
+export type ResumeLayout = 'modern' | 'creative' | 'corporate';
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   sections: Section[];
   theme: ResumeTheme;
+  layout: ResumeLayout;
 }

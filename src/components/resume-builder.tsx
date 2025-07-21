@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, DragEvent } from 'react';
-import type { ResumeData, Section, ResumeTheme } from '@/lib/types';
+import type { ResumeData, Section, ResumeTheme, ResumeLayout } from '@/lib/types';
 import { initialResumeData } from '@/lib/initial-resume';
 import ResumeHeader from '@/components/resume-header';
 import ResumeControls from '@/components/resume-controls';
@@ -21,7 +21,13 @@ export default function ResumeBuilder() {
     const savedData = localStorage.getItem('resumeData');
     if (savedData) {
       try {
-        setResumeData(JSON.parse(savedData));
+        const parsed = JSON.parse(savedData);
+        // Basic validation to prevent loading malformed data
+        if (parsed.personalInfo && parsed.sections && parsed.theme) {
+          setResumeData(parsed);
+        } else {
+          localStorage.removeItem('resumeData');
+        }
       } catch (e) {
         console.error("Failed to parse resume data from localStorage", e);
         localStorage.removeItem('resumeData');
@@ -99,6 +105,10 @@ export default function ResumeBuilder() {
     }));
   };
 
+  const handleLayoutChange = (newLayout: ResumeLayout) => {
+    setResumeData(prev => ({ ...prev, layout: newLayout }));
+  }
+
   if (!isClient) {
      return <div className="w-full h-full flex items-center justify-center bg-background"><p>Loading Resume Architect...</p></div>;
   }
@@ -110,15 +120,17 @@ export default function ResumeBuilder() {
         <aside className="xl:col-span-1 flex flex-col gap-4">
           <ThemeSelector 
             currentTheme={resumeData.theme}
+            currentLayout={resumeData.layout}
             onThemeChange={handleThemeChange}
+            onLayoutChange={handleLayoutChange}
             fontOptions={fontOptions}
             colorOptions={colorOptions}
           />
-          <div className="flex-grow">
+          <div className="flex-grow overflow-y-auto">
             <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
           </div>
         </aside>
-        <main className="xl:col-span-2 flex justify-center items-start p-4 bg-secondary/30 rounded-lg">
+        <main className="xl:col-span-2 flex justify-center items-start p-4 bg-secondary/30 rounded-lg overflow-y-auto">
           <ResumePreview 
             resumeData={resumeData} 
             onDragStart={handleDragStart}

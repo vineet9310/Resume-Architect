@@ -1,23 +1,40 @@
 
 'use client';
 
-import { Paintbrush, Type } from 'lucide-react';
+import { Paintbrush, Type, LayoutTemplate } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { ResumeTheme } from '@/lib/types';
+import type { ResumeTheme, ResumeLayout } from '@/lib/types';
 import type { FontOption, ColorOption } from '@/lib/themes';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface ThemeSelectorProps {
   currentTheme: ResumeTheme;
+  currentLayout: ResumeLayout;
   onThemeChange: (newTheme: Partial<ResumeTheme>) => void;
+  onLayoutChange: (newLayout: ResumeLayout) => void;
   fontOptions: FontOption[];
   colorOptions: ColorOption[];
 }
 
+const layoutOptions: { value: ResumeLayout, label: string }[] = [
+    { value: 'modern', label: 'Modern' },
+    { value: 'creative', label: 'Creative' },
+    { value: 'corporate', label: 'Corporate' },
+]
+
 export default function ThemeSelector({
   currentTheme,
+  currentLayout,
   onThemeChange,
+  onLayoutChange,
   fontOptions,
   colorOptions,
 }: ThemeSelectorProps) {
@@ -30,6 +47,21 @@ export default function ThemeSelector({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div>
+           <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
+            <LayoutTemplate className="w-4 h-4" /> Layout
+          </h4>
+          <Select onValueChange={(value: ResumeLayout) => onLayoutChange(value)} defaultValue={currentLayout}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a layout" />
+            </SelectTrigger>
+            <SelectContent>
+              {layoutOptions.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div>
           <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
             <Type className="w-4 h-4" /> Font Style

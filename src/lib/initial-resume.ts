@@ -85,4 +85,5 @@ export const initialResumeData: ResumeData = {
     color: 'default',
     font: 'lexend',
   },
+  layout: 'modern',
 };
