@@ -19,8 +19,7 @@
     box-shadow: none;
     border-radius: 0;
     width: 210mm;
-    min-height: 297mm;
-    height: auto;
+    height: 297mm;
     padding: 20mm;
     margin: 0;
     border: none;
@@ -39,8 +38,15 @@
 }
 
 .A4-size {
-    width: 210mm;
-    min-height: 297mm;
+    width: 100%;
+    aspect-ratio: 210 / 297;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media screen and (min-width: 8.5in) {
+    .A4-size {
+        width: 210mm;
+        height: 297mm;
+    }
 }
