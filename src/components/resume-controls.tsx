@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { ResumeData, Section, PersonalInfo, Experience, Education, Project, Certification } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AccordionHeader } from '@/components/ui/accordion';
-import { Trash2, PlusCircle, ChevronsUpDown, Sparkles, Loader2, Wand2 } from 'lucide-react';
+import { Trash2, PlusCircle, ChevronsUpDown, Sparkles, Loader2, Wand2, Image as ImageIcon } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -82,6 +82,7 @@ const AiTextarea = ({
 export default function ResumeControls({ resumeData, setResumeData }: ResumeControlsProps) {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFullEnhance = async () => {
     setIsEnhancing(true);
@@ -113,6 +114,23 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
         [name]: value,
       },
     }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setResumeData(prev => ({
+          ...prev,
+          personalInfo: {
+            ...prev.personalInfo,
+            photoUrl: reader.result as string,
+          },
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
   
   const handleSectionContentChange = (sectionId: string, content: any) => {
@@ -350,6 +368,27 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
           <CardTitle className="font-headline text-base">Personal Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+           {resumeData.layout === 'creative' && (
+            <div className="space-y-1">
+              <Label>Profile Photo</Label>
+              <Input 
+                ref={fileInputRef}
+                type="file" 
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
+                <ImageIcon className="mr-2 h-4 w-4" />
+                {resumeData.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}
+              </Button>
+              {resumeData.personalInfo.photoUrl && (
+                <div className="mt-2 w-24 h-24 rounded-md overflow-hidden bg-muted">
+                    <img src={resumeData.personalInfo.photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+          )}
           <div className="space-y-1">
             <Label htmlFor="name">Full Name</Label>
             <Input id="name" name="name" value={resumeData.personalInfo.name} onChange={handlePersonalInfoChange} />
@@ -382,8 +421,9 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
           <CardTitle className="font-headline text-base">Resume Sections</CardTitle>
         </CardHeader>
         <CardContent>
-          <Accordion type="multiple" className="w-full space-y-2">
+          <Accordion type="multiple" className="w-full space-y-2" defaultValue={['summary']}>
             {resumeData.sections.map(section => (
+               section.visible && (
               <AccordionItem value={section.id} key={section.id} className="border-b-0">
                  <Card className="overflow-hidden">
                     <AccordionHeader className="flex items-center p-2">
@@ -407,6 +447,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                     </AccordionContent>
                  </Card>
               </AccordionItem>
+               )
             ))}
           </Accordion>
           <div className="mt-4">

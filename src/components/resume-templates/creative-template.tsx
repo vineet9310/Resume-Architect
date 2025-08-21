@@ -137,8 +137,8 @@ export default function CreativeTemplate({ resumeData, onDragStart, onDragOver, 
         <div className="text-center sticky top-8">
             <div
               data-ai-hint="person portrait"
-              className="w-32 h-32 rounded-full mx-auto mb-4 bg-cover bg-center"
-              style={{ backgroundImage: `url(https://placehold.co/128x128.png)`}}
+              className="w-32 h-32 rounded-full mx-auto mb-4 bg-cover bg-center bg-gray-300"
+              style={{ backgroundImage: `url(${personalInfo.photoUrl || 'https://placehold.co/128x128.png'})`}}
             ></div>
             <h1 className="text-3xl font-bold">{personalInfo.name}</h1>
         

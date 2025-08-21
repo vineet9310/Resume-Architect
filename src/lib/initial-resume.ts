@@ -8,6 +8,7 @@ export const initialResumeData: ResumeData = {
     address: '123 Main St, Anytown, USA',
     linkedin: 'linkedin.com/in/janedoe',
     github: 'github.com/janedoe',
+    photoUrl: '',
   },
   sections: [
     {
@@ -80,6 +81,20 @@ export const initialResumeData: ResumeData = {
         }
       ]
     },
+     {
+      id: 'certifications',
+      type: 'certifications',
+      title: 'Certifications',
+      visible: false,
+      content: []
+    },
+    {
+      id: 'languages',
+      type: 'languages',
+      title: 'Languages',
+      visible: false,
+      content: ''
+    }
   ],
   theme: {
     color: 'default',
