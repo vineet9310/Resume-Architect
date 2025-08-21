@@ -104,18 +104,18 @@ export default function ResumeHeader({
               </h1>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={handleUploadClick}>
-                <Upload className="mr-2 h-4 w-4" /> Upload Resume
+              <Button variant="outline" size="sm" onClick={handleUploadClick} className="flex items-center gap-2">
+                <Upload className="h-4 w-4" /> <span className="hidden sm:inline">Upload Resume</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleJsonExport}>
-                <FileDown className="mr-2 h-4 w-4" /> Export JSON
+              <Button variant="outline" size="sm" onClick={handleJsonExport} className="flex items-center gap-2">
+                <FileDown className="h-4 w-4" /> <span className="hidden sm:inline">Export JSON</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={triggerJsonImport}>
-                <FileUp className="mr-2 h-4 w-4" /> Import JSON
+              <Button variant="outline" size="sm" onClick={triggerJsonImport} className="flex items-center gap-2">
+                <FileUp className="h-4 w-4" /> <span className="hidden sm:inline">Import JSON</span>
               </Button>
               <input type="file" id="json-import-input" className="hidden" accept=".json" onChange={onJsonImport} />
-              <Button size="sm" onClick={handlePrint}>
-                <Download className="mr-2 h-4 w-4" /> Download PDF
+              <Button size="sm" onClick={handlePrint} className="flex items-center gap-2">
+                <Download className="h-4 w-4" /> <span className="hidden sm:inline">Download PDF</span>
               </Button>
             </div>
           </div>
