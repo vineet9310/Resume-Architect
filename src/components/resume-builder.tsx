@@ -129,7 +129,7 @@ export default function ResumeBuilder() {
       />
       
       <main className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 print:hidden">
           <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3">
             Choose Your Resume Template
           </h1>
@@ -138,13 +138,15 @@ export default function ResumeBuilder() {
           </p>
         </div>
 
-        <TemplateSelector 
-          currentLayout={resumeData.layout} 
-          onLayoutChange={handleLayoutChange} 
-        />
+        <div className="print:hidden">
+            <TemplateSelector 
+            currentLayout={resumeData.layout} 
+            onLayoutChange={handleLayoutChange} 
+            />
+        </div>
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-1 space-y-8">
+          <div className="lg:col-span-1 space-y-8 print:hidden">
             <ThemeSelector 
               currentTheme={resumeData.theme}
               onThemeChange={handleThemeChange}
