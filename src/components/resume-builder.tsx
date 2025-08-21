@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import ThemeSelector from './theme-selector';
 import { fontOptions, colorOptions } from '@/lib/themes';
 import TemplateSelector from './template-selector';
+import { parseResumeFromText } from '@/ai/flows/parse-resume-from-text';
 
 export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
@@ -41,7 +42,6 @@ export default function ResumeBuilder() {
     }
   }, [resumeData, isClient]);
 
-
   const handleJsonImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -67,6 +67,30 @@ export default function ResumeBuilder() {
         }
       };
       reader.readAsText(file);
+    }
+  };
+
+  // Add the missing upload resume handler
+  const handleUploadResume = () => {
+    // This function is called by ResumeHeader but the actual logic is handled there
+    console.log('Upload resume clicked');
+  };
+
+  // Add the resume data update handler for parsed content
+  const handleResumeDataUpdate = async (newData: ResumeData) => {
+    try {
+      setResumeData(newData);
+      toast({
+        title: "Success",
+        description: "Resume uploaded and parsed successfully!",
+      });
+    } catch (error) {
+      console.error('Failed to update resume data:', error);
+      toast({
+        variant: "destructive",
+        title: "Update Error",
+        description: "Failed to update resume data.",
+      });
     }
   };
 
@@ -107,43 +131,62 @@ export default function ResumeBuilder() {
 
   const handleLayoutChange = (newLayout: ResumeLayout) => {
     setResumeData(prev => ({ ...prev, layout: newLayout }));
-  }
+  };
 
   if (!isClient) {
-     return <div className="w-full h-screen flex items-center justify-center bg-background"><p>Loading Resume Architect...</p></div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-background">
+        <p>Loading Resume Architect...</p>
+      </div>
+    );
   }
 
   return (
     <div className="bg-background text-foreground min-h-screen">
-      <ResumeHeader resumeData={resumeData} onJsonImport={handleJsonImport} />
+      <ResumeHeader 
+        resumeData={resumeData} 
+        onJsonImport={handleJsonImport} 
+        onUploadResume={handleUploadResume}
+        onResumeDataUpdate={handleResumeDataUpdate}
+      />
       
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3">Two-column resume templates</h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">Our two-column resume templates help you maximize space while keeping your resume clean and organized, making it easy to showcase your strengths at a glance.</p>
+          <h1 className="text-4xl md:text-5xl font-bold font-headline mb-3">
+            Choose Your Resume Template
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Select a template to get started. You can customize the layout, colors, and fonts to match your personal brand.
+          </p>
         </div>
 
-        <TemplateSelector currentLayout={resumeData.layout} onLayoutChange={handleLayoutChange} />
+        <TemplateSelector 
+          currentLayout={resumeData.layout} 
+          onLayoutChange={handleLayoutChange} 
+        />
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-1 space-y-8">
-              <ThemeSelector 
-                currentTheme={resumeData.theme}
-                onThemeChange={handleThemeChange}
-                fontOptions={fontOptions}
-                colorOptions={colorOptions}
-              />
-              <ResumeControls resumeData={resumeData} setResumeData={setResumeData} />
-            </div>
+          <div className="lg:col-span-1 space-y-8">
+            <ThemeSelector 
+              currentTheme={resumeData.theme}
+              onThemeChange={handleThemeChange}
+              fontOptions={fontOptions}
+              colorOptions={colorOptions}
+            />
+            <ResumeControls 
+              resumeData={resumeData} 
+              setResumeData={setResumeData} 
+            />
+          </div>
 
-            <div className="lg:col-span-2">
-                 <ResumePreview 
-                    resumeData={resumeData} 
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                 />
-            </div>
+          <div className="lg:col-span-2">
+            <ResumePreview 
+              resumeData={resumeData} 
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            />
+          </div>
         </div>
       </main>
     </div>

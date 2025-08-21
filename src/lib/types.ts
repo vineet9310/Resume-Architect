@@ -53,7 +53,7 @@ export interface ResumeTheme {
   font: string;
 }
 
-export type ResumeLayout = 'modern' | 'creative' | 'corporate' | 'two-column';
+export type ResumeLayout = 'modern' | 'creative' | 'corporate' | 'two-column' | 'minimalist' | 'artistic';
 
 export interface ResumeData {
   personalInfo: PersonalInfo;

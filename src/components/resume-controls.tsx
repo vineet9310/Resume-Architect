@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AccordionHeader } from '@/components/ui/accordion';
-import { Trash2, PlusCircle, ChevronsUpDown, Sparkles, Loader2 } from 'lucide-react';
+import { Trash2, PlusCircle, ChevronsUpDown, Sparkles, Loader2, Wand2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { improveResumeWriting } from '@/ai/flows/improve-resume-writing';
+import { enhanceFullResume } from '@/ai/flows/enhance-full-resume';
 import { useToast } from '@/hooks/use-toast';
 import { DatePicker } from './date-picker';
 
@@ -40,7 +41,7 @@ const AiTextarea = ({
       toast({
         variant: 'destructive',
         title: 'Input Required',
-        description: 'Please enter some text to improve.',
+        description: 'Behtar banane ke liye kuch text enter karein.',
       });
       return;
     }
@@ -53,7 +54,7 @@ const AiTextarea = ({
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to get suggestion from AI assistant.',
+        description: 'AI assistant se sujhav nahi mil saka.',
       });
     } finally {
       setIsLoading(false);
@@ -79,6 +80,29 @@ const AiTextarea = ({
 
 
 export default function ResumeControls({ resumeData, setResumeData }: ResumeControlsProps) {
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const { toast } = useToast();
+
+  const handleFullEnhance = async () => {
+    setIsEnhancing(true);
+    try {
+      const enhancedData = await enhanceFullResume(resumeData);
+      setResumeData(enhancedData);
+      toast({
+        title: 'Resume Enhanced!',
+        description: 'Aapka resume AI ki madad se behtar bana diya gaya hai.',
+      });
+    } catch (error) {
+      console.error('Full resume enhancement error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Poore resume ko enhance karne mein samasya aayi.',
+      });
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
 
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -114,7 +138,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
             onChange={(e) => handleSectionContentChange(section.id, e.target.value)}
             onImprove={(improved) => handleSectionContentChange(section.id, improved)}
             rows={6}
-            placeholder="Enter a professional summary..."
+            placeholder="Ek professional summary enter karein..."
             className="text-sm pr-36 pb-10"
           />
         );
@@ -128,7 +152,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
             placeholder={
               section.type === 'skills' ? "e.g. JavaScript, React, Node.js" :
               section.type === 'languages' ? "e.g. English (Native), Spanish (Conversational)" :
-              "Enter content..."
+              "Content enter karein..."
             }
             className="text-sm"
           />
@@ -304,6 +328,23 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
 
   return (
     <div className="space-y-6">
+       <Card>
+        <CardHeader>
+          <CardTitle className="font-headline text-base flex justify-between items-center">
+            <span>Resume Controls</span>
+            <Button size="sm" onClick={handleFullEnhance} disabled={isEnhancing}>
+              {isEnhancing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+              Enhance Full Resume
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            Yahan se aap apne resume ke har section ko control kar sakte hain.
+          </p>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="font-headline text-base">Personal Information</CardTitle>
@@ -371,7 +412,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
           <div className="mt-4">
               <Select onValueChange={(value: Section['type']) => addSection(value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Add new section..." />
+                  <SelectValue placeholder="Naya section add karein..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="summary">Summary</SelectItem>
