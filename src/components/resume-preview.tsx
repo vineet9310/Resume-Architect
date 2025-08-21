@@ -38,8 +38,8 @@ export default function ResumePreview({ resumeData, onDragStart, onDragOver, onD
   }
 
   return (
-    <div id="resume-container" className="lg:sticky top-24 print:sticky-auto">
-       <div className="w-full max-w-[210mm] mx-auto scale-[0.9] sm:scale-100 origin-top print:scale-100">
+    <div id="resume-container" className="lg:sticky top-24 print:static">
+       <div className="w-full max-w-[210mm] mx-auto scale-[0.9] sm:scale-100 origin-top print:scale-100 print:max-w-full">
          {renderTemplate()}
        </div>
     </div>
