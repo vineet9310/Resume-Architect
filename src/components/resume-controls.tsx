@@ -132,6 +132,16 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
       reader.readAsDataURL(file);
     }
   };
+
+  const handleRemoveImage = () => {
+    setResumeData(prev => ({
+      ...prev,
+      personalInfo: {
+        ...prev.personalInfo,
+        photoUrl: '',
+      },
+    }));
+  };
   
   const handleSectionContentChange = (sectionId: string, content: any) => {
     setResumeData(prev => ({
@@ -369,7 +379,7 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
         </CardHeader>
         <CardContent className="space-y-4">
            {resumeData.layout === 'creative' && (
-            <div className="space-y-1">
+            <div className="space-y-2">
               <Label>Profile Photo</Label>
               <Input 
                 ref={fileInputRef}
@@ -378,12 +388,19 @@ export default function ResumeControls({ resumeData, setResumeData }: ResumeCont
                 accept="image/*"
                 onChange={handleImageUpload}
               />
-              <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
-                <ImageIcon className="mr-2 h-4 w-4" />
-                {resumeData.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}
-              </Button>
+               <div className="flex items-center gap-2">
+                <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="flex-grow">
+                  <ImageIcon className="mr-2 h-4 w-4" />
+                  {resumeData.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}
+                </Button>
+                {resumeData.personalInfo.photoUrl && (
+                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={handleRemoveImage}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
               {resumeData.personalInfo.photoUrl && (
-                <div className="mt-2 w-24 h-24 rounded-md overflow-hidden bg-muted">
+                <div className="mt-2 w-24 h-24 rounded-md overflow-hidden bg-muted relative group">
                     <img src={resumeData.personalInfo.photoUrl} alt="Profile" className="w-full h-full object-cover" />
                 </div>
               )}
