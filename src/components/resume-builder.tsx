@@ -10,7 +10,6 @@ import { useToast } from '@/hooks/use-toast';
 import ThemeSelector from './theme-selector';
 import { fontOptions, colorOptions } from '@/lib/themes';
 import TemplateSelector from './template-selector';
-import { parseResumeFromText } from '@/ai/flows/parse-resume-from-text';
 
 export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
@@ -70,30 +69,6 @@ export default function ResumeBuilder() {
     }
   };
 
-  // Add the missing upload resume handler
-  const handleUploadResume = () => {
-    // This function is called by ResumeHeader but the actual logic is handled there
-    console.log('Upload resume clicked');
-  };
-
-  // Add the resume data update handler for parsed content
-  const handleResumeDataUpdate = async (newData: ResumeData) => {
-    try {
-      setResumeData(newData);
-      toast({
-        title: "Success",
-        description: "Resume uploaded and parsed successfully!",
-      });
-    } catch (error) {
-      console.error('Failed to update resume data:', error);
-      toast({
-        variant: "destructive",
-        title: "Update Error",
-        description: "Failed to update resume data.",
-      });
-    }
-  };
-
   const handleDragStart = (e: DragEvent<HTMLDivElement>, item: Section) => {
     setDraggedItem(item);
     e.dataTransfer.effectAllowed = 'move';
@@ -146,8 +121,6 @@ export default function ResumeBuilder() {
       <ResumeHeader 
         resumeData={resumeData} 
         onJsonImport={handleJsonImport} 
-        onUploadResume={handleUploadResume}
-        onResumeDataUpdate={handleResumeDataUpdate}
       />
       
       <main className="container mx-auto px-4 py-8">

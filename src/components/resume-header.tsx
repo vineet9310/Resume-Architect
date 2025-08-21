@@ -1,30 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { FileDown, FileUp, Download, Upload } from 'lucide-react';
+import { FileDown, FileUp, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import type { ResumeData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { ResumeUploader } from './resume-uploader';
-import { parseResumeFromText } from '@/ai/flows/parse-resume-from-text';
 
 interface ResumeHeaderProps {
   resumeData: ResumeData;
   onJsonImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onUploadResume: () => void;
-  onResumeDataUpdate: (newData: ResumeData) => void; // Changed from onResumeContentUpload
 }
 
 export default function ResumeHeader({
   resumeData,
   onJsonImport,
-  onUploadResume,
-  onResumeDataUpdate
 }: ResumeHeaderProps) {
   const { toast } = useToast();
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [isParsing, setIsParsing] = useState(false);
 
   const handlePrint = () => {
     window.print();
@@ -59,33 +49,6 @@ export default function ResumeHeader({
     document.getElementById('json-import-input')?.click();
   };
 
-  const handleUploadClick = () => {
-    setShowUploadModal(true);
-  };
-
-  const handleResumeUpload = async (content: string) => {
-    setIsParsing(true);
-    try {
-      // Use AI to parse the resume content
-      const parsedData = await parseResumeFromText(content);
-      onResumeDataUpdate(parsedData);
-      setShowUploadModal(false);
-      toast({
-        title: "Success",
-        description: "Resume successfully uploaded and parsed!",
-      });
-    } catch (error) {
-      console.error('Resume parsing error:', error);
-      toast({
-        variant: "destructive",
-        title: "Upload Error",
-        description: "Failed to process resume content. Please try again.",
-      });
-    } finally {
-      setIsParsing(false);
-    }
-  };
-
   return (
     <>
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm print:hidden">
@@ -104,9 +67,6 @@ export default function ResumeHeader({
               </h1>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={handleUploadClick} className="flex items-center gap-2">
-                <Upload className="h-4 w-4" /> <span className="hidden sm:inline">Upload Resume</span>
-              </Button>
               <Button variant="outline" size="sm" onClick={handleJsonExport} className="flex items-center gap-2">
                 <FileDown className="h-4 w-4" /> <span className="hidden sm:inline">Export JSON</span>
               </Button>
@@ -121,17 +81,6 @@ export default function ResumeHeader({
           </div>
         </div>
       </header>
-
-      {/* Upload Modal */}
-      <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogTitle>Upload Resume</DialogTitle>
-          <ResumeUploader 
-            onUpload={handleResumeUpload}
-            isParsing={isParsing}
-          />
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
