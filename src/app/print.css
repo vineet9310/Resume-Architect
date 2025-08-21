@@ -1,57 +1,41 @@
 /* A4 paper size for printing */
 @page {
   size: A4;
-  margin: 0 !important;
+  margin: 0;
 }
 
 @media print {
-  html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden;
+  body {
     -webkit-print-color-adjust: exact; /* Chrome, Safari */
     color-adjust: exact; /* Firefox */
   }
 
-  body > * {
+  /* Hide header and controls */
+  header, 
+  .lg\:col-span-1,
+  .print\:hidden {
     display: none !important;
   }
-
-  body > #resume-container,
+  
+  /* Ensure the preview container and its parents are visible */
+  main,
+  .lg\:col-span-2,
   #resume-container {
     display: block !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
-    position: absolute;
-    top: 0;
-    left: 0;
   }
 
   #resume-preview {
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    border: none !important;
     transform: scale(1) !important;
-    display: block !important;
-    page-break-inside: avoid;
-  }
-
-  /* Try to avoid breaking pages inside these elements */
-  .mb-4, .mb-6, div, h2, p, ul, li {
-    page-break-inside: avoid;
-  }
-
-  /* Try to avoid breaking pages after a heading */
-  h2 {
-    page-break-after: avoid;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 auto !important;
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always;
   }
 }
 
