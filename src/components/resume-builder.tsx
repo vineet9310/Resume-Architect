@@ -19,21 +19,26 @@ export default function ResumeBuilder() {
 
   useEffect(() => {
     setIsClient(true);
-    const savedData = localStorage.getItem('resumeData');
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        if (parsed.personalInfo && parsed.sections && parsed.theme) {
-          setResumeData(parsed);
-        } else {
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const savedData = localStorage.getItem('resumeData');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed.personalInfo && parsed.sections && parsed.theme) {
+            setResumeData(parsed);
+          } else {
+            localStorage.removeItem('resumeData');
+          }
+        } catch (e) {
+          console.error("Failed to parse resume data from localStorage", e);
           localStorage.removeItem('resumeData');
         }
-      } catch (e) {
-        console.error("Failed to parse resume data from localStorage", e);
-        localStorage.removeItem('resumeData');
       }
     }
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
     if (isClient) {
