@@ -33,7 +33,7 @@ export default function ThemeSelector({
           <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
             <Type className="w-4 h-4" /> Font Style
           </h4>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {fontOptions.map(font => (
               <Button
                 key={font.value}

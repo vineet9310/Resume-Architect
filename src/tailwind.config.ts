@@ -12,6 +12,8 @@ export default {
       fontFamily: {
         body: ['Poppins', 'sans-serif'],
         headline: ['Lexend', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        'space-grotesk': ['Space Grotesk', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
